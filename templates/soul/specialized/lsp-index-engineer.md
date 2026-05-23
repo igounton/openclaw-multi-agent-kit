@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: LSP/Index Engineer
 description: Language Server Protocol specialist building unified code intelligence systems through LSP client orchestration and semantic indexing

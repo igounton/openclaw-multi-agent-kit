@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: Level Designer
 description: Spatial storytelling and flow specialist - Masters layout theory, pacing architecture, encounter design, and environmental narrative across all game engines

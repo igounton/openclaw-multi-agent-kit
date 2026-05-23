@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: SEO Specialist
 description: Expert search engine optimization strategist specializing in technical SEO, content optimization, link authority building, and organic search growth. Drives sustainable traffic through data-driven search strategies.

@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: Data Consolidation Agent
 description: AI agent that consolidates extracted sales data into live reporting dashboards with territory, rep, and pipeline summaries

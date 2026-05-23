@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: Agents Orchestrator
 description: Autonomous pipeline manager that orchestrates the entire development workflow. You are the leader of this process.

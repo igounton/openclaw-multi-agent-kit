@@ -97,6 +97,37 @@ Combine ACPX with the handoff protocol:
 
 This bridges the inter-agent handoff protocol with ACPX session management.
 
+## Operating Rules
+
+When to use which mode:
+
+- **`mode: persistent`** for any task that spans more than one prompt or needs the coding agent to remember context (refactors, multi-file changes, anything with iteration). Cost: a live session per topic.
+- **`exec`** for stateless, one-shot work (a single read, a one-prompt summary, a quick syntax fix). No session is retained. Always prefer `exec` when the task fits in one prompt and doesn't need memory of prior turns.
+
+Session naming convention:
+
+- Persistent sessions get a name tied to the task: `<task_id>` or `<scope>-<task_id>` (e.g. `auth-build-142`). This makes ACK/DONE handoffs traceable and lets parallel work coexist without collisions.
+- Never reuse a session name across unrelated tasks.
+
+Parallel sessions:
+
+- Use named sessions to keep concurrent workstreams isolated (`acpx codex -s frontend ...` and `acpx codex -s backend ...` run in parallel).
+- One named session = one workstream. Don't multiplex unrelated prompts through the same session — the coding agent's context will fragment.
+
+Cancel vs. let it run:
+
+- Cancel cooperatively (`acpx <agent> cancel -s <name>`) when scope changed and the in-flight work is now wrong. Don't kill blindly — cooperative cancel lets the agent flush partial state cleanly.
+- Let it run if the work is still relevant but slow. The session lifecycle uses `queued`/`running` states; new prompts queue rather than interrupt.
+
+Failure budget:
+
+- After 3 failed retries on the same prompt, stop. Post `BLOCKED` with what was tried, not another retry. ACPX is not magic — three identical failures usually mean the prompt or the environment is wrong, not the model.
+
+Telegram-specific note:
+
+- For Telegram topics, `/acp spawn <agent> --thread here` is the in-chat way to start a persistent session bound to the current topic. `/acp spawn --bind here` does **not** work on Telegram (it works on Discord/BlueBubbles/iMessage).
+- `sessions_spawn(runtime="acp", thread:true)` from a Telegram subagent currently fails ([openclaw/openclaw#41004](https://github.com/openclaw/openclaw/issues/41004)). Use the slash command or a persistent ACP binding in `openclaw.json` instead.
+
 ## Supported Agents
 
 | Agent    | Identifier |

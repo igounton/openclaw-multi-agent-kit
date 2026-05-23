@@ -29,7 +29,7 @@ Key capabilities:
 |---|---|
 | **ACPX** | `npm install -g acpx@latest` |
 | **Agent backend(s)** | At least one installed: Claude Code, Codex, OpenCode, Gemini CLI, etc. |
-| **OpenClaw** | v2026.3.28 or later (adds `spawnAcpSessions`, `/acp spawn`, persistent ACP bindings) |
+| **OpenClaw** | v2026.3.28 or later (adds `/acp spawn`, persistent ACP bindings); v2026.3.31 is the latest known release |
 | **Telegram supergroup** | Configured per [supergroup-setup.md](supergroup-setup.md) or [telegram-dm-topics.md](telegram-dm-topics.md) |
 | **Node.js** | 18+ (for ACPX) |
 
@@ -184,24 +184,20 @@ The `match` object determines which conversations route to this ACP agent. Use t
 
 ### Step 5 — Enable thread bindings
 
-Thread bindings allow OpenClaw to automatically create ACP sessions when conversations start in a bound topic:
+Thread bindings allow OpenClaw to automatically create ACP sessions when conversations start in a bound topic. They live under `channels.telegram.threadBindings` (channel-wide) and/or `channels.telegram.accounts.<accountId>.threadBindings` (per-account override). They are **not** under top-level `session.threadBindings` — that path is not part of the current schema.
 
 ```json
 {
-  "session": {
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48,
-      "maxAgeHours": 0
-    }
-  },
   "channels": {
     "telegram": {
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      },
       "accounts": {
         "default": {
           "threadBindings": {
-            "enabled": true,
-            "spawnAcpSessions": true
+            "spawnSessions": true
           }
         }
       }
@@ -210,7 +206,7 @@ Thread bindings allow OpenClaw to automatically create ACP sessions when convers
 }
 ```
 
-`spawnAcpSessions: true` is the key setting — it tells the gateway to create an ACPX session when a new thread starts in a topic with an ACP binding.
+`spawnSessions: true` is the key setting (default `true`) — it tells the gateway to create an ACPX session when a new thread starts in a topic with an ACP binding. The only other documented Telegram `threadBindings` key is `idleHours`. Older keys like `enabled`, `spawnAcpSessions`, `maxAgeHours`, or `maxAgeDays` are not part of the Telegram schema.
 
 ### Step 6 — Enable ACP globally
 
@@ -236,28 +232,28 @@ After restart, messages in the bound topic route directly to the ACPX session. V
 
 ---
 
-## The `--bind here` Pattern
+## The `/acp spawn --thread here` Pattern
 
 New in OpenClaw v2026.3.28.
 
-The `/acp spawn` slash command lets you turn any Telegram conversation into a coding workspace on the fly:
+The `/acp spawn` slash command lets you turn the current Telegram forum topic into a coding workspace on the fly:
 
 ```text
-/acp spawn codex --bind here
+/acp spawn codex --thread here
 ```
 
-This creates a persistent ACPX session bound to the **current** conversation — no config changes, no child threads. Every subsequent message in that conversation goes to the coding agent until the session expires.
+This creates a persistent ACPX session bound to the **current topic** — no config changes needed. Every subsequent message in that topic goes to the coding agent until the session expires. Use `--thread auto` to let the gateway pick the binding mode.
+
+> **Telegram-specific flag note.** The general `/acp spawn` command supports both `--bind here|off` and `--thread auto|here|off`, but **Telegram channel sessions cannot use `--bind here`** — only thread-bound modes work when `channels.telegram.threadBindings.spawnSessions` is enabled (the default). For Discord, BlueBubbles, and iMessage, `--bind here` is supported.
 
 **How it differs from persistent bindings:**
 
-| Aspect | Persistent binding | `--bind here` |
+| Aspect | Persistent binding | `--thread here` |
 |---|---|---|
 | Setup | Config in `openclaw.json` | Slash command in chat |
-| Scope | Pre-defined topics/peers | Any conversation |
+| Scope | Pre-defined topics/peers | Current topic only |
 | Persistence | Survives gateway restart | Session-scoped, expires with idle timeout |
 | Use case | Production workflows | Ad-hoc coding tasks, debugging |
-
-You can also use `--bind here` from Discord, BlueBubbles, and iMessage conversations.
 
 ---
 
@@ -391,13 +387,13 @@ Full `openclaw.json` snippet showing all ACPX sections together:
       {
         "id": "orchestrator",
         "workspace": "/home/YOUR_USER/.openclaw/workspace/",
-        "model": "anthropic/claude-sonnet-4-6",
+        "model": "YOUR_PROVIDER/YOUR_MODEL_ID",
         "subagents": { "allowAgents": ["*"] }
       },
       {
         "id": "coder-acp",
         "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/coder/",
-        "model": "anthropic/claude-sonnet-4-6",
+        "model": "YOUR_PROVIDER/YOUR_MODEL_ID",
         "runtime": {
           "type": "acp",
           "acp": {
@@ -450,17 +446,13 @@ Full `openclaw.json` snippet showing all ACPX sections together:
     "allowedAgents": ["codex", "claude", "opencode"]
   },
 
-  "session": {
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48,
-      "maxAgeHours": 0
-    }
-  },
-
   "channels": {
     "telegram": {
       "enabled": true,
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      },
       "accounts": {
         "default": {
           "botToken": "YOUR_BOT_TOKEN",
@@ -481,8 +473,7 @@ Full `openclaw.json` snippet showing all ACPX sections together:
             }
           },
           "threadBindings": {
-            "enabled": true,
-            "spawnAcpSessions": true
+            "spawnSessions": true
           }
         }
       }
@@ -498,8 +489,9 @@ Full `openclaw.json` snippet showing all ACPX sections together:
 | Problem | Cause | Fix |
 |---|---|---|
 | Messages in topic get no response | Binding `match` is wrong | Verify `peer.id` format: `GROUP_ID:topic:TOPIC_ID` |
-| `sessions_spawn` fails from Telegram | Platform restriction | Route through a subagent intermediary |
-| ACPX session not created on new thread | `spawnAcpSessions` not set | Enable in account-level `threadBindings` config |
+| `sessions_spawn(runtime="acp", thread:true)` from Telegram returns "Thread bindings do not support ACP thread spawn for telegram" | Known issue ([openclaw/openclaw#41004](https://github.com/openclaw/openclaw/issues/41004)) — direct `/acp spawn` works in-topic but the `thread:true` variant of `sessions_spawn` is not yet supported for Telegram | Use `/acp spawn <agent> --thread here` from the topic, or configure a persistent ACP binding in `openclaw.json` |
+| `sessions_send` between agents breaks Telegram routing | Known issue ([openclaw/openclaw#31671](https://github.com/openclaw/openclaw/issues/31671)) — `sessions_send` can corrupt the target session's channel field from `telegram` to `webchat`, so the target agent stops receiving Telegram messages | Until fixed upstream, have receivers post lifecycle messages (ACK/DONE) explicitly via the `message` tool targeting the topic, rather than relying on the target session's channel state |
+| ACPX session not created on new thread | `spawnSessions` not set | Set `channels.telegram.threadBindings.spawnSessions: true` (or the per-account override) |
 | Coding agent times out | Large codebase or complex task | Increase `idleHours`, or break task into smaller prompts |
 | `acpx: command not found` | ACPX not installed globally | Run `npm install -g acpx@latest` |
 | `agent not found` error | Backend not installed | Install the coding agent CLI (e.g. Claude Code, Codex CLI) |

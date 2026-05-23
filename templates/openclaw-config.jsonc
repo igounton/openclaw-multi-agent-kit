@@ -3,15 +3,12 @@
 // Replace all YOUR_* placeholders with actual values
 
 {
-  // Agent defaults — applied to all agents unless overridden
+  // Agent defaults — applied to all agents unless overridden.
+  // No model is set here so agents inherit whatever provider/model
+  // your OpenClaw runtime is configured with. Override per-agent in
+  // `agents.list[].model` only if a role truly needs a specific model.
   "agents": {
     "defaults": {
-      "model": {
-        "primary": "anthropic/claude-sonnet-4-6",
-        "fallbacks": [
-          "anthropic/claude-haiku-4-5"
-        ]
-      },
       "workspace": "/home/YOUR_USER/.openclaw/workspace",
       "maxConcurrent": 4
     }
@@ -27,7 +24,13 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "pairing",
-      "streaming": "off"
+      "streaming": "off",
+      // Thread bindings — auto-spawn ACP sessions when a new topic conversation starts.
+      // Lives under channels.telegram (and optionally per-account); NOT at the top-level `session`.
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      }
     }
   },
 
@@ -46,13 +49,7 @@
 
   // Session config
   "session": {
-    "dmScope": "per-channel-peer",
-    // Thread bindings — persistent sessions per topic/thread
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48,
-      "maxAgeHours": 0
-    }
+    "dmScope": "per-channel-peer"
   },
 
   // Hooks for boot files, memory, etc.

@@ -152,17 +152,20 @@ In the `agents.list` array, add each agent:
 ```json
 {
   "id": "AGENT_ID",
-  "workspace": "/home/USER/.openclaw/workspace/agents/AGENT_ID/",
-  "model": "anthropic/claude-sonnet-4-6"
+  "workspace": "/home/USER/.openclaw/workspace/agents/AGENT_ID/"
 }
 ```
 
 **Model selection guidance:**
-- Orchestrator: `anthropic/claude-sonnet-4-6` (needs to be smart)
-- Coder: `anthropic/claude-sonnet-4-6` or `anthropic/claude-opus-4-6` (code quality matters)
-- QA, DevOps, Ops: `anthropic/claude-haiku-4-5` (lighter tasks, saves cost)
-- Research, Content, Lead Gen: `anthropic/claude-sonnet-4-6` (needs reasoning)
-- Growth, Community: `anthropic/claude-haiku-4-5` or `anthropic/claude-sonnet-4-6`
+
+Leave `model` unset on each agent so they inherit the OpenClaw runtime default. The templates in this repo are intentionally model-agnostic — they run on any provider/model your OpenClaw is configured with.
+
+Only pin a specific model on an individual agent if you have a concrete reason:
+- A role that consistently underperforms on the default — pin a more capable model just for that role.
+- A high-volume, low-stakes role (triage, ack-only handoffs) — pin a smaller/cheaper model to save cost.
+- A role that needs a specific provider-only feature.
+
+When you do pin, use the model id format your provider expects, e.g. `"model": "anthropic/<id>"` or `"model": "openai/<id>"`. Treat the per-agent override as the exception, not the default.
 
 ### 5.2 Add bindings
 
@@ -291,26 +294,38 @@ This lets the coder agent use `sessions_spawn(runtime="acp")` to delegate to Cla
 
 ### 5.5 Add thread bindings (recommended)
 
-Enable persistent sessions per topic:
+Enable persistent sessions per topic. Thread bindings live **under the channel** (`channels.telegram.threadBindings`), with an optional per-account override. They do NOT live at top-level `session` — that's a different block.
+
+Channel-level default (applies to all Telegram accounts unless overridden):
 
 ```json
-"session": {
-  "threadBindings": {
-    "enabled": true,
-    "idleHours": 48,
-    "maxAgeHours": 0
+"channels": {
+  "telegram": {
+    "threadBindings": {
+      "spawnSessions": true,
+      "idleHours": 48
+    }
   }
 }
 ```
 
-On the coder's Telegram account, also add:
+Per-account override (e.g., only the coder account should spawn ACP sessions on new threads):
 
 ```json
-"threadBindings": {
-  "enabled": true,
-  "spawnAcpSessions": true
+"channels": {
+  "telegram": {
+    "accounts": {
+      "coder": {
+        "threadBindings": {
+          "spawnSessions": true
+        }
+      }
+    }
+  }
 }
 ```
+
+The only documented keys for Telegram `threadBindings` are `spawnSessions` (boolean, default `true`) and `idleHours`. Keys like `enabled`, `maxAgeHours`, or `maxAgeDays` are not part of the current Telegram schema — leave them out.
 
 ### 5.6 Configure groupAllowFrom
 

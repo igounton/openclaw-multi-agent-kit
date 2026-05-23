@@ -1,30 +1,24 @@
 {
   "_comment": "Minimal 3-agent setup: orchestrator + coder + QA",
-  "_note": "Replace YOUR_BOT_TOKEN_X, YOUR_GROUP_ID, and TOPIC_BUILD with your values",
+  "_note": "Replace YOUR_BOT_TOKEN_X, YOUR_GROUP_ID, and TOPIC_BUILD with your values. Models intentionally unbound — agents inherit the OpenClaw runtime default.",
 
   "agents": {
     "defaults": {
-      "model": {
-        "primary": "anthropic/claude-sonnet-4-6"
-      },
       "workspace": "/home/YOUR_USER/.openclaw/workspace",
       "maxConcurrent": 2
     },
     "list": [
       {
         "id": "orchestrator",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/"
       },
       {
         "id": "coder",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/coder/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/coder/"
       },
       {
         "id": "qa",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/qa/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/qa/"
       }
     ]
   },
@@ -46,16 +40,16 @@
   ],
 
   "session": {
-    "dmScope": "per-channel-peer",
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48
-    }
+    "dmScope": "per-channel-peer"
   },
 
   "channels": {
     "telegram": {
       "enabled": true,
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      },
       "accounts": {
         "default": {
           "botToken": "YOUR_ORCHESTRATOR_BOT_TOKEN",

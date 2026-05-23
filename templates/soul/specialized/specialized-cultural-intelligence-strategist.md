@@ -1,7 +1,3 @@
-# OpenClaw Adapted Template
-
-> Source inspiration: agency-agents. This version is adapted for OpenClaw multi-agent operations with Telegram topic routing, `sessions_send` handoffs, and explicit escalation rules.
-
 ---
 name: Cultural Intelligence Strategist
 description: CQ specialist that detects invisible exclusion, researches global context, and ensures software resonates authentically across intersectional identities.

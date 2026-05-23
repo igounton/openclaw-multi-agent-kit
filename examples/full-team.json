@@ -1,13 +1,9 @@
 {
   "_comment": "Full 10-agent team configuration for openclaw.json",
-  "_note": "Replace YOUR_BOT_TOKEN_X, YOUR_GROUP_ID, and topic numbers with your values",
+  "_note": "Replace YOUR_BOT_TOKEN_X, YOUR_GROUP_ID, and topic numbers with your values. Models intentionally unbound — each agent inherits the OpenClaw runtime default, so this config runs on whatever provider/model you have configured.",
 
   "agents": {
     "defaults": {
-      "model": {
-        "primary": "anthropic/claude-sonnet-4-6",
-        "fallbacks": ["anthropic/claude-haiku-4-5"]
-      },
       "workspace": "/home/YOUR_USER/.openclaw/workspace",
       "maxConcurrent": 4
     },
@@ -15,55 +11,49 @@
       {
         "id": "orchestrator",
         "workspace": "/home/YOUR_USER/.openclaw/workspace/",
-        "model": "anthropic/claude-sonnet-4-6",
         "subagents": { "allowAgents": ["*"] }
       },
       {
         "id": "coder",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/coder/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/coder/"
       },
       {
         "id": "qa",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/qa/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/qa/"
       },
       {
         "id": "devops",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/devops/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/devops/"
       },
       {
         "id": "researcher",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/researcher/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/researcher/"
       },
       {
         "id": "growth",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/growth/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/growth/"
       },
       {
         "id": "content",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/content/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/content/"
       },
       {
         "id": "community",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/community/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/community/"
       },
       {
         "id": "leadgen",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/leadgen/",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/leadgen/"
       },
       {
         "id": "ops",
-        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/ops/",
-        "model": "anthropic/claude-haiku-4-5"
+        "workspace": "/home/YOUR_USER/.openclaw/workspace/agents/ops/"
       }
     ]
+  },
+
+  "skills": {
+    "enabled": true
   },
 
   "acp": {
@@ -91,11 +81,7 @@
         "accountId": "default",
         "peer": { "kind": "group", "id": "YOUR_GROUP_ID:topic:YOUR_CODING_TOPIC_ID" }
       },
-  "skills": {
-    "enabled": true
-  },
-
-  "acp": {
+      "acp": {
         "label": "coding",
         "mode": "persistent",
         "cwd": "/path/to/your/project"
@@ -104,17 +90,16 @@
   ],
 
   "session": {
-    "dmScope": "per-channel-peer",
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48,
-      "maxAgeHours": 0
-    }
+    "dmScope": "per-channel-peer"
   },
 
   "channels": {
     "telegram": {
       "enabled": true,
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      },
       "accounts": {
         "default": {
           "botToken": "YOUR_ORCHESTRATOR_BOT_TOKEN",
@@ -139,8 +124,7 @@
           "botToken": "YOUR_CODER_BOT_TOKEN",
           "dmPolicy": "pairing",
           "threadBindings": {
-            "enabled": true,
-            "spawnAcpSessions": true
+            "spawnSessions": true
           },
           "groups": {
             "YOUR_GROUP_ID": {

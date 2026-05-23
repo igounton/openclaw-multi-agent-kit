@@ -28,19 +28,21 @@ When you split, remember:
 
 ## Cost Considerations
 
-Model selection is the biggest lever on monthly spend:
+Model selection is the biggest lever on monthly spend, but the templates in this repo are intentionally **model-agnostic** — agents inherit whatever model your OpenClaw runtime is configured with. Tune cost by overriding `model` on individual agents in `openclaw.json`, not by editing templates.
 
-| Model | Relative Cost | Best For |
-|-------|--------------|----------|
-| `claude-opus-4-6` | $$$ | Complex coding, architecture decisions |
-| `claude-sonnet-4-6` | $$ | Orchestration, research, content, lead gen |
-| `claude-haiku-4-5` | $ | QA checks, ops tasks, community, triage |
+Rough tiers (use whichever your provider equivalents are):
+
+| Tier | Best For |
+|------|----------|
+| **Most capable** (top-tier reasoning) | Complex coding, architecture decisions |
+| **Balanced** (default tier) | Orchestration, research, content, lead gen |
+| **Smallest / cheapest** | QA checks, ops tasks, community, triage |
 
 Rules of thumb:
-- Start every new agent on `haiku-4-5` and upgrade only if output quality is insufficient
-- Orchestrator needs reasoning ability — don't go below `sonnet-4-6`
+- Start every new agent on the runtime default and upgrade only if output quality is insufficient
+- Orchestrator needs real reasoning — don't downgrade it below the balanced tier
 - Coding agents benefit most from stronger models; the cost difference pays for itself in fewer QA cycles
-- A 10-agent team with smart model selection costs roughly 3x a 10-agent team on all-haiku, but 0.3x a team on all-opus
+- Pinning specific model ids in templates couples your team to one provider — leave model unset by default and override per-agent only when needed
 
 ## Avoiding Circular Triggers
 

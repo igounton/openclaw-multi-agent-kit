@@ -202,22 +202,20 @@ Replace `<chatId>` with your chat ID (e.g. `5594479851`) and `<topicId>` with th
 
 ### Step 4 — Enable thread bindings
 
+Thread bindings live under `channels.telegram.threadBindings` (and optionally per-account). They are **not** at top-level `session`. The only documented Telegram keys are `spawnSessions` (boolean, default `true`) and `idleHours`.
+
 ```json
 {
-  "session": {
-    "threadBindings": {
-      "enabled": true,
-      "idleHours": 48,
-      "maxAgeHours": 0
-    }
-  },
   "channels": {
     "telegram": {
+      "threadBindings": {
+        "spawnSessions": true,
+        "idleHours": 48
+      },
       "accounts": {
         "default": {
           "threadBindings": {
-            "enabled": true,
-            "spawnAcpSessions": true
+            "spawnSessions": true
           }
         }
       }
@@ -254,7 +252,9 @@ For programmatic ACP spawning, route through a subagent intermediary:
 1. Spawn a subagent
 2. Have the subagent call `sessions_spawn(runtime="acp")`
 
-For chat-driven ACP sessions, use `/acp spawn` slash command or configure persistent bindings as above.
+For chat-driven ACP sessions, use the `/acp spawn` slash command or configure persistent bindings as above.
+
+> **Known issue ([openclaw/openclaw#41004](https://github.com/openclaw/openclaw/issues/41004)).** `sessions_spawn(runtime="acp", thread:true)` currently returns *"Thread bindings do not support ACP thread spawn for telegram"* even from a subagent. Until this is fixed upstream, the reliable paths for Telegram are (a) `/acp spawn <agent> --thread here` in-topic, or (b) a persistent ACP binding declared in `openclaw.json` (Steps 2–4 above).
 
 ### ACPX Session Management
 
@@ -267,20 +267,22 @@ Once an ACP topic is set up, you can manage coding sessions:
 
 See [acpx-telegram.md](acpx-telegram.md) for the complete guide.
 
-### --bind here (v2026.3.28+)
+### `/acp spawn --thread here` (v2026.3.28+)
 
-OpenClaw v2026.3.28 added current-conversation ACP binds. Use:
+OpenClaw v2026.3.28 added in-topic ACP binds. For Telegram, use:
 
 ```
-/acp spawn codex --bind here
+/acp spawn codex --thread here
 ```
 
-This turns the current Telegram conversation into a coding workspace without creating a child thread. The ACP session lives in the current chat surface.
+This binds the **current forum topic** to a new ACP session — every subsequent message in that topic goes to the coding agent until the session expires. `--thread auto` is also supported (gateway picks the binding mode).
+
+> **Telegram-specific flag note.** `/acp spawn` documents both `--bind here|off` and `--thread auto|here|off`, but Telegram channel sessions cannot use `--bind here` — only thread-bound modes work when `channels.telegram.threadBindings.spawnSessions` is enabled. Use `--bind here` only from Discord, BlueBubbles, or iMessage. (See the `--bind` flag note in [acpx-telegram.md](acpx-telegram.md#the-acp-spawn---thread-here-pattern).)
 
 Difference from persistent bindings:
-- Persistent bindings (Step 2 above) are configured in openclaw.json and survive restarts
-- `--bind here` is a runtime command that binds to the current conversation for the session lifetime
-- Use persistent bindings for permanent coding topics; use `--bind here` for ad-hoc coding tasks
+- Persistent bindings (Step 2 above) are configured in `openclaw.json` and survive restarts.
+- `--thread here` is a runtime command that binds the current topic for the session lifetime (subject to `idleHours`).
+- Use persistent bindings for permanent coding topics; use `--thread here` for ad-hoc coding tasks.
 
 ---
 

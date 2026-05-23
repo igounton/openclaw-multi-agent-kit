@@ -97,4 +97,4 @@ Don't have agents write code via prompt engineering — use ACPX to delegate to 
 
 ## 13) Thread Bindings for Persistent Coding Sessions
 
-Enable `session.threadBindings` with `spawnAcpSessions: true` on the coder's Telegram account. This creates persistent ACP sessions per topic thread, so the coding agent remembers context across messages without re-establishing state. Set `idleHours` (48 recommended) to control session lifetime. Combine with the `--bind here` pattern for ad-hoc coding topics.
+Enable `channels.telegram.threadBindings` with `spawnSessions: true` (channel-level), optionally overriding per-account on the coder's Telegram account. This creates persistent ACP sessions per topic thread, so the coding agent remembers context across messages without re-establishing state. Set `idleHours` (48 recommended) to control session lifetime. Combine with the `/acp spawn <agent> --thread here` pattern for ad-hoc coding topics (Telegram uses `--thread`, not `--bind`).

@@ -190,7 +190,7 @@ Agents can delegate coding work to dedicated coding agents (Claude Code, Codex, 
 
 1. Define a coder agent with `runtime.type: "acp"` in openclaw.json
 2. Other agents trigger it via `sessions_spawn(runtime="acp")` from a subagent session
-3. Or use `/acp spawn codex --bind here` to turn any Telegram conversation into a coding workspace
+3. Or use `/acp spawn codex --thread here` from a Telegram forum topic to turn it into a coding workspace (the `--bind here` flag works on Discord / BlueBubbles / iMessage but not on Telegram)
 
 See [docs/acpx-telegram.md](docs/acpx-telegram.md) for the full guide.
 
