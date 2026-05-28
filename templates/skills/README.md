@@ -11,6 +11,7 @@ Use these as starter Skill packages when an agent needs deterministic workflows,
 - `ops-triage/SKILL.md` — inbox/calendar/task triage with priority routing
 - `telegram-topic-setup/SKILL.md` — automated Telegram topic creation and agent binding
 - `acpx-session/SKILL.md` — ACPX session management for agent-to-coding-agent delegation
+- `template-audit/SKILL.md` — audit SOUL/SKILL/IDENTITY templates for frontmatter, duplicates, descriptions, placeholders, and prompt-budget size
 
 ## Usage
 

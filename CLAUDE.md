@@ -86,7 +86,8 @@ The kit ships **two layers of soul templates**:
         ├── content-repurpose/         # Cross-channel post repurposing
         ├── ops-triage/                # Priority routing for inbox/calendar/tasks
         ├── telegram-topic-setup/      # Automated topic creation and binding
-        └── acpx-session/              # ACPX session management patterns
+        ├── acpx-session/              # ACPX session management patterns
+        └── template-audit/            # Audit SOUL/SKILL/IDENTITY templates for hygiene
 ```
 
 ## Architecture — Key Concepts
