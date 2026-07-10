@@ -1,3 +1,10 @@
+---
+summary: "When to add agents, cost tiers, and avoiding circular triggers"
+read_when:
+  - "Growing beyond the starter team"
+  - "Token costs rising or agents triggering each other in loops"
+---
+
 # Scaling Your Team
 
 Practical guidance for growing your agent team. For step-by-step setup instructions, see [INSTRUCTIONS.md](../INSTRUCTIONS.md).

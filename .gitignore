@@ -5,3 +5,15 @@ Thumbs.db
 *~
 .vscode/
 .idea/
+
+# Machine-bound links (recreated per machine by agent-repo-standards/link-skills.sh)
+.agents/skills
+.agents/AGENTS.base.md
+.claude/commands
+.opencode/commands
+
+# Machine-only agent overrides — never tracked
+AGENTS.local.md
+
+# Tool output
+.fastcontext/

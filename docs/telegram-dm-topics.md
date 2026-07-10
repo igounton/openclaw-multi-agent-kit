@@ -1,3 +1,10 @@
+---
+summary: "Forum topics inside a Telegram direct chat + ACP binding"
+read_when:
+  - "Setting up DM topics instead of (or alongside) a supergroup"
+  - "Binding ACP sessions inside a direct chat"
+---
+
 # Telegram DM Topics Guide
 
 How to use **Telegram forum topics inside a direct chat** with OpenClaw.

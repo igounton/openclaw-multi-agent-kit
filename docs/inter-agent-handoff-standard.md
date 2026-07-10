@@ -1,3 +1,10 @@
+---
+summary: "HANDOFF/ACK/DONE/BLOCKED contract for all sessions_send cross-agent requests"
+read_when:
+  - "Writing any cross-agent flow or trigger"
+  - "Handoffs getting lost or agents not acknowledging work"
+---
+
 # Inter-Agent Handoff Standard (sessions_send)
 
 Use this standard for **all** agent-to-agent requests in OpenClaw teams.

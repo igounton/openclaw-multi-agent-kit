@@ -213,7 +213,10 @@ See [docs/acpx-telegram.md](docs/acpx-telegram.md) for the full guide.
 
 ## Docs
 
+Every doc carries `summary:`/`read_when:` frontmatter; [docs/index.md](docs/index.md) is the full index.
+
 - [INSTRUCTIONS.md](INSTRUCTIONS.md) — **AI-readable setup guide** (give this to your agent)
+- [Architecture](docs/architecture.md) — Repo structure, platform concepts, editing checklists
 - [Agent Design Patterns](docs/agent-design-patterns.md) — How to write effective SOUL.md files
 - [Supergroup Setup Guide](docs/supergroup-setup.md) — Step-by-step Telegram setup
 - [Telegram Channel Architecture](docs/telegram-channel-architecture.md) — Production lane design for topic routing

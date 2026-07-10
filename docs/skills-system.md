@@ -1,3 +1,10 @@
+---
+summary: "OpenClaw native Skills system - ClawHub install, Control UI, custom skills"
+read_when:
+  - "Adding, installing, or authoring a skill"
+  - "A skill isn't loading or triggering"
+---
+
 # Skills System
 
 OpenClaw v2026.3.24 introduced a native Skills system for giving agents deterministic, reusable workflows. Skills live as `SKILL.md` files in each agent's workspace and are loaded automatically by the runtime. They complement SOUL.md — where SOUL.md defines who an agent *is*, a skill defines how it *executes* a specific workflow.

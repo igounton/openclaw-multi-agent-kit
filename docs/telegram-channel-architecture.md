@@ -1,3 +1,10 @@
+---
+summary: "Production lane design for topic routing when the team grows beyond 3-4 agents"
+read_when:
+  - "Routing getting messy as agents are added"
+  - "Designing team topics and lanes"
+---
+
 # Telegram Channel Architecture (Production Pattern)
 
 Use this when your team grows beyond 3-4 agents and routing starts getting messy.

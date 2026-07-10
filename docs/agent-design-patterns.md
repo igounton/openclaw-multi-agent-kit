@@ -1,3 +1,10 @@
+---
+summary: "How to write effective SOUL.md files - the standard 10-section pattern"
+read_when:
+  - "Writing or reviewing a SOUL.md template"
+  - "An agent's personality or behavior feels off"
+---
+
 # Agent Design Patterns
 
 How to write effective SOUL.md files for OpenClaw agents.

@@ -1,3 +1,10 @@
+---
+summary: "Connect ACPX (headless ACP CLI) to OpenClaw Telegram agents for coding-agent delegation"
+read_when:
+  - "Setting up ACPX or coding subagents (Claude Code, Codex, ...)"
+  - "Debugging /acp spawn, thread bindings, or ACP config keys"
+---
+
 # ACPX + Telegram Integration Guide
 
 How to connect **ACPX** (the headless CLI for Agent Client Protocol) to your OpenClaw Telegram agent team, giving your agents direct access to coding agents like Claude Code, Codex, OpenCode, Gemini CLI, and more.

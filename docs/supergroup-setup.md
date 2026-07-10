@@ -1,3 +1,10 @@
+---
+summary: "Step-by-step Telegram supergroup setup for an agent team"
+read_when:
+  - "Initial team setup"
+  - "Adding topics or bots to the supergroup"
+---
+
 # Supergroup Setup Guide
 
 Step-by-step guide to setting up a Telegram supergroup for your agent team.

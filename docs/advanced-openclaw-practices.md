@@ -1,3 +1,10 @@
+---
+summary: "13 production-tested operating patterns for multi-agent OpenClaw teams"
+read_when:
+  - "Designing how a team operates day-to-day"
+  - "Agents misrouting, looping, or drowning in noise"
+---
+
 # Advanced OpenClaw Practices (That Actually Work)
 
 This is a pragmatic playbook for operating multi-agent teams in production.
